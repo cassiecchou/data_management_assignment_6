@@ -1,0 +1,86 @@
+---
+title: "Assignment 6 Report"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r Example Chunk, echo=FALSE}
+
+# Open wws03 file 
+load(file="wws03.RData") 
+
+#Let's create an example chunk, to grab the date and save it in run.date : 
+run.date <- format(Sys.Date(), "%m-%d-%Y")
+
+```
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. 
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+
+In the next line of text, notice that there is R code that is replaced with the actual output of the command. The ** characters make the text **bold**. 
+
+This report is for all data collected as of **`r run.date`**.  
+
+**Cohort Summary**  
+There are there are a total of **`r nrow(wws03)`** women in our study. The mean age is **`r round(mean(wws03$age), 1)`** years and **`r nrow(wws03[wws03$married==1,])`** are married.
+
+
+*You can embed an R code chunk like this with echo=TRUE and it will display the R code followed by the output:*
+```{r Barplot Age Distribution, echo=TRUE}
+counts <- table(wws03$age)
+barplot(counts, main="Age Distribution", xlab = "Age in years")
+```
+
+
+*The next R code chunk is not displayed because echo=FALSE. Only the output is displayed.*
+```{r Boxplot Pulse by Age, echo=FALSE}
+boxplot(wws03$plavg ~ wws03$age, ylab = "Average Pulse" ,xlab = "Age (years)", main="Average Pulse by Age")
+
+```
+
+**Here is a table created using pander**  
+```{r Pander Table College Grad by Marital Stat, results = 'asis', echo=FALSE}
+
+wws03$collgrad <- factor(wws03$collgrad,
+                            levels=c(0,1),
+                            labels=c("no","yes"))
+
+wws03$married <- factor(wws03$married,
+                            levels=c(0,1),
+                            labels=c("no","yes"))
+
+
+required.packages <- c("descr","pander","dplyr","knitr")
+packages.to.install <- setdiff(required.packages, installed.packages())
+if(length(packages.to.install) > 0) install.packages(packages.to.install)
+
+library(descr)
+library(pander)
+pander(CrossTable(wws03$collgrad,wws03$married, digits = 1, prop.c = FALSE, 
+                  prop.t = FALSE, chisq = FALSE, prop.chisq = FALSE, row.labels = TRUE, dnn = c("College Graduate","Married"))) 
+
+```
+
+**Here is a table created with kable**  
+```{r Table made with kable, results = 'asis', echo=FALSE}
+
+# Load dplyr and instruct it not to give any messages because these will appear in the output.
+library(dplyr,quietly = TRUE,warn.conflicts = FALSE)
+
+# Create a data frame of participants with bpavg > 130 and return the specified columns.
+data <- wws03[wws03$bpavg > 130, c(1:2,31:35,42)]
+# Sort the data by bpavg in desc order
+data <- arrange(data,desc(bpavg))
+
+# Load knitr and instruct it not to give any messages because these will appear in the output.
+library(knitr,quietly = TRUE,warn.conflicts = FALSE)
+
+# Print the table using kable
+kable(data,row.names = FALSE,col.names = c("Participant ID","Age","BP1","BP2","BP3","BP4","BP5","BP Average"))
+
+
+```
