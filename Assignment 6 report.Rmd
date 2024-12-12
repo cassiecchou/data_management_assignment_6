@@ -7,7 +7,6 @@ output:
 ---
 
 ```{r Example Chunk, echo=FALSE}
-
 # Open wws03 file 
 load(file="wws03.RData") 
 
@@ -33,6 +32,13 @@ There are there are a total of **`r nrow(wws03)`** women in our study. The mean 
 ```{r Barplot Age Distribution, echo=TRUE}
 counts <- table(wws03$age)
 barplot(counts, main="Age Distribution", xlab = "Age in years")
+```
+
+
+*Add Years of School Plot*
+```{r Barplot School Years Distribution, echo=TRUE}
+counts <- table(wws03$yrschool)
+barplot(counts, main="Years of School Distribution", xlab = "Years of school")
 ```
 
 

@@ -1,4 +1,4 @@
-# 10/15/2002
+# 12/11/2024
 # Cassie Chou
 # Assignment #6 - wws01 
 #
@@ -18,7 +18,7 @@ pacman::p_load(
   Hmisc      # Data tools
 )
 
-# Add your code below
+# Code
 wws_df <- import("wws.csv")
 cardio_wide1_df <- import("cardio_wide1.csv")
 wws01 <- wws_df %>% left_join(cardio_wide1_df, by = "idcode")
